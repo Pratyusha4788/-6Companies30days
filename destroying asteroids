@@ -1,0 +1,33 @@
+class Solution {
+public:
+    bool asteroidsDestroyed(int mass, vector<int>& asteroids) {
+        // lame sauce
+        ios::sync_with_stdio(false), cin.tie(0), cout.tie(0);
+
+        // Use a quick-select-like partition operation
+        // to move elements that are smaller than mass to the beginning of the array
+        // while you do that, add that smaller mass to running mass variable
+        // if you get to a point in the array where the mass is "sorted", return false
+        // if you reach the end of the array, return true
+        int partIndex = 0;
+        int previousPart = -1;
+        unsigned long m = mass;
+
+        // first partition move smaller masses to left
+        while (true) {
+            for (int i = partIndex; i < asteroids.size(); i++) {
+                if (asteroids[i] <= m) {
+                    m += asteroids[i];
+                    swap(asteroids[partIndex], asteroids[i]);
+                    partIndex++;
+                }
+            }
+            if (partIndex == asteroids.size()) return true;
+            if (partIndex == previousPart) return false;
+
+            previousPart = partIndex;
+        }
+
+        return false;
+    }
+};
