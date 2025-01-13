@@ -1,0 +1,34 @@
+class Solution {
+public:
+    int stoneGameVI(vector<int>& aliceValues, vector<int>& bobValues) {
+        int n = aliceValues.size();
+        vector<pair<int, pair<int, int>>> stones;
+
+        // Combine Alice's and Bob's values for each stone
+        for (int i = 0; i < n; i++) {
+            stones.push_back({aliceValues[i] + bobValues[i], {aliceValues[i], bobValues[i]}});
+        }
+
+        // Sort stones based on the combined value (highest first)
+        sort(stones.begin(), stones.end(), [](const pair<int, pair<int, int>>& a, const pair<int, pair<int, int>>& b) {
+            return a.first > b.first;
+        });
+
+        int scoreDifference = 0;
+        // Alternate picking stones between Alice and Bob
+        for (int i = 0; i < n; i++) {
+            if (i % 2 == 0) {
+                // Alice's turn
+                scoreDifference += stones[i].second.first;
+            } else {
+                // Bob's turn
+                scoreDifference -= stones[i].second.second;
+            }
+        }
+
+        // Determine the winner
+        if (scoreDifference > 0) return 1;  // Alice wins
+        if (scoreDifference < 0) return -1; // Bob wins
+        return 0;  // Tie
+    }
+};
