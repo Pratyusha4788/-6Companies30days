@@ -1,0 +1,60 @@
+class ThroneInheritance {
+public:
+    ThroneInheritance(string kingName) {
+        _root = new Person(kingName);
+        _map[kingName] = _root;
+    }
+    
+    void birth(string parentName, string childName) {
+        // map each personName to a Person*
+        Person* parent = _map[parentName];
+        Person* child = new Person(childName);
+        _map[childName] = child;
+        parent->children.push_back(child);
+    }
+    
+    void death(string name) {
+        Person* person = _map[name];
+        person->alive = false;
+    }
+    
+    vector<string> getInheritanceOrder() {
+        // no need to precompute this since we call this function rarely -> At most 10 calls to getInheritanceOrder
+        std::vector<std::string> inheritanceOrder;
+
+        // DFS
+        // start at king.
+        // if person is alive, add to list. Go down through the children in order of birth
+        // Do this recursively until person has no children
+        dfs(inheritanceOrder, _root);
+
+        return inheritanceOrder;
+    }
+private:
+    struct Person {
+        const std::string name;
+        bool alive;
+        std::vector<Person*> children;
+        Person(const std::string& nameParam) : name(nameParam), alive(true) {};
+    };
+
+    std::unordered_map<std::string, Person*> _map;
+    Person* _root;
+
+    void dfs(std::vector<std::string>& inheritanceOrder, Person* person) {
+        if(person->alive) {
+            inheritanceOrder.push_back(person->name);
+        }
+        for(Person* child : person->children) {
+            dfs(inheritanceOrder, child);
+        }
+    }
+};
+
+/**
+ * Your ThroneInheritance object will be instantiated and called as such:
+ * ThroneInheritance* obj = new ThroneInheritance(kingName);
+ * obj->birth(parentName,childName);
+ * obj->death(name);
+ * vector<string> param_3 = obj->getInheritanceOrder();
+ */
