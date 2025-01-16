@@ -1,0 +1,47 @@
+class Solution {
+public:
+    unordered_set<unsigned> S;
+    inline void put_in_S(string& s){
+        unsigned mask=0;
+        for(char c: s){
+            const int i=c-'a';
+            mask|=(1<<i);
+        }
+        S.insert(mask);  
+    }
+
+    int wordCount(vector<string>& startWords, vector<string>& targetWords) {
+        const int n=startWords.size();
+        S.reserve(n);
+        for(auto& s : startWords)
+            put_in_S(s);
+
+        int cnt=0;
+        for(auto& s: targetWords){
+            unsigned mask=0;
+            for(char c: s){
+                const int i=c-'a';
+                mask|=(1<<i);
+            }
+            for(char c: s){
+                const int i=c-'a';
+                if (S.count(mask^(1<<i))){
+                    cnt++;
+                    break;
+                }
+            }
+        }
+        return cnt;
+    }
+};
+
+
+
+
+
+auto init = []() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    return 'c';
+}();
