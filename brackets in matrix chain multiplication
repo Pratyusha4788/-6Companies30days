@@ -1,0 +1,35 @@
+// User function Template for C++
+class Solution {
+  public:
+    pair<string,int> fun(vector<int> &arr,int i,int j,vector<vector<pair<string,int>>> &v){
+        if(i==j){
+            string st="";
+            st+='A'+i-1;
+            return {st,0};
+        }
+        if(v[i][j].second!=-1)
+        return v[i][j];
+        int m=1e9;
+        string sr="";
+        for(int k=i;k<j;k++){
+            auto pr1=fun(arr,i,k,v);
+            auto pr2=fun(arr,k+1,j,v);
+            int x=pr1.second+pr2.second+arr[i-1]*arr[k]*arr[j];
+            string s="";
+            s+="("+pr1.first+pr2.first+")";
+            if(m>x){
+                m=x;
+                sr=s;
+            }
+        }
+        v[i][j]={sr,m};
+        return v[i][j];
+        }
+    string matrixChainOrder(vector<int> &arr) {
+        // code here
+        int n=arr.size();
+        vector<vector<pair<string,int>>> v(n,vector<pair<string,int>>(n,{"",-1}));
+        auto ans=fun(arr,1,n-1,v);
+        return ans.first;
+    }
+};
